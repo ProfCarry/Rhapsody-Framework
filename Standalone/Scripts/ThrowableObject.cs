@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Pool;
 
+[RequireComponent(typeof(UnityTimer))]
 [RequireComponent(typeof(Rigidbody2D))]
 public class ThrowableObject : MonoBehaviour, IThrowable, IPoolable
 {
@@ -16,13 +17,13 @@ public class ThrowableObject : MonoBehaviour, IThrowable, IPoolable
 
     private ObjectPool<ThrowableObject> pool;
 
-    private BandTimer timer;
+    private UnityTimer timer;
 
     private Rigidbody2D rigidBody;
 
     private void Awake()
     {
-        timer=new BandTimer();
+        timer=this.GetComponent<UnityTimer>();
         timer.OnTimeout.AddListener(Release);
 
         rigidBody=this.GetComponent<Rigidbody2D>();
@@ -40,8 +41,8 @@ public class ThrowableObject : MonoBehaviour, IThrowable, IPoolable
             rigidBody = this.GetComponent<Rigidbody2D>();
         Unfreeze();
         if (timer == null)
-            timer = new BandTimer();
-        timer.Start();
+            timer = this.GetComponent<UnityTimer>();
+        timer.Run();
         rigidBody.AddForce(direction,ForceMode2D.Impulse);
     }
 
